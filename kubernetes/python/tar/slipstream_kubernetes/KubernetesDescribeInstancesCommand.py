@@ -50,8 +50,8 @@ class KubernetesDescribeInstances(DescribeInstancesCommand, KubernetesCommand):
                 self._vm_get_restart_policy(cc, vm),
                 self._vm_get_cpu(cc, vm),
                 self._vm_get_ram(cc, vm),
-                self._vm_get_instance_type(cc, vm)]),
-                self._vm_get_creation_time(cc, vm)]),
+                self._vm_get_instance_type(cc, vm),
+                self._vm_get_creation_time(cc, vm),
                 self._vm_get_start_time(cc, vm)])
 
     def __init__(self):
