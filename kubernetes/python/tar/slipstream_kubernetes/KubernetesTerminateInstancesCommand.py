@@ -20,6 +20,7 @@
 from slipstream.command.CloudClientCommand import main
 from slipstream.command.TerminateInstancesCommand import TerminateInstancesCommand
 from slipstream_kubernetes.KubernetesCommand import KubernetesCommand
+from slipstream.ConfigHolder import ConfigHolder
 
 
 class KubernetesTerminateInstances(TerminateInstancesCommand, KubernetesCommand):
