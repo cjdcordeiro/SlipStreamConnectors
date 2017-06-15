@@ -264,7 +264,7 @@ class KubernetesClientCluster(BaseCloudConnector):
 
     def _vm_get_node_name(self, vm):
         # Return the host name
-        if self._vm_get_state(vm) != "Running":
+        if "containerStatuses" not in vm['spec'].keys():
             return ""
         else:
             return vm['spec']['nodeName']
@@ -296,7 +296,10 @@ class KubernetesClientCluster(BaseCloudConnector):
 
     @override
     def _vm_get_ip(self, vm):
-        return vm['status']['podIP']
+        if "containerStatuses" not in vm['spec'].keys():
+            return ""
+        else:
+            return vm['status']['podIP']
 
     @override
     def _vm_get_cpu(self, vm):
