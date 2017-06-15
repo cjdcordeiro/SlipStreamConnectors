@@ -37,5 +37,8 @@ class KubernetesCommand(CloudClientCommand):
     def get_cloud_specific_user_cloud_params(self):
         return {self.ENDPOINT_KEY: self.get_option(self.ENDPOINT_KEY)}
 
+    def get_common_mandatory_options(self):
+        return []
+
     def get_cloud_specific_mandatory_options(self):
         return [self.ENDPOINT_KEY]

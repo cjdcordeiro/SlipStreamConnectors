@@ -19,14 +19,14 @@
 
 from slipstream.command.CloudClientCommand import main
 from slipstream.command.TerminateInstancesCommand import TerminateInstancesCommand
-from slipstream_opennebula.OpenNebulaCommand import OpenNebulaCommand
+from slipstream_kubernetes.KubernetesCommand import KubernetesCommand
 
 
-class OpenNebulaTerminateInstances(TerminateInstancesCommand, OpenNebulaCommand):
+class KubernetesTerminateInstances(TerminateInstancesCommand, KubernetesCommand):
 
     def __init__(self):
-        super(OpenNebulaTerminateInstances, self).__init__()
+        super(KubernetesTerminateInstances, self).__init__()
 
 
 if __name__ == "__main__":
-    main(OpenNebulaTerminateInstances)
+    main(KubernetesTerminateInstances)
