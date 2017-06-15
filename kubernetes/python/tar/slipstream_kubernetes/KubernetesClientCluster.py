@@ -274,8 +274,8 @@ class KubernetesClientCluster(BaseCloudConnector):
         # string of hostPort:containerPort mappings
         port_mappings = ""
         for mapping in vm['spec']['container']['ports']:
-            port_mappings += " , %s:%s" % vm['spec']['container']['ports'].get("hostPort", "") \
-                            vm['spec']['container']['ports'].get("containerPort", "")
+            port_mappings += " , %s:%s" % (vm['spec']['container']['ports'].get("hostPort", ""), \
+                            vm['spec']['container']['ports'].get("containerPort", ""))
         return port_mappings
 
     def _vm_get_restart_policy(self, vm):
