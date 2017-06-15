@@ -292,7 +292,10 @@ class KubernetesClientCluster(BaseCloudConnector):
 
     def _vm_get_start_time(self, vm):
         # Return the container creation time
-        return vm['status']['startTime']
+        if "containerStatuses" not in vm['spec'].keys():
+            return ""
+        else:
+            return vm['status']['startTime']
 
     @override
     def _vm_get_ip(self, vm):
