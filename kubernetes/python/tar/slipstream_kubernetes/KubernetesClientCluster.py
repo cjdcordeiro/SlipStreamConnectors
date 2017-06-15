@@ -297,11 +297,17 @@ class KubernetesClientCluster(BaseCloudConnector):
 
     @override
     def _vm_get_cpu(self, vm):
-        return vm['spec']['containers'][0]['resources']['requests']['cpu']
+        if bool(vm['spec']['containers'][0]['resources']):
+            return vm['spec']['containers'][0]['resources']['requests']['cpu']
+        else:
+            return "not defined"
 
     @override
     def _vm_get_ram(self, vm):
-        return vm['spec']['containers'][0]['resources']['requests']['memory']
+        if bool(vm['spec']['containers'][0]['resources']):
+            return vm['spec']['containers'][0]['resources']['requests']['memory']
+        else:
+            return "not defined"
 
     @override
     def _vm_get_id(self, vm):
