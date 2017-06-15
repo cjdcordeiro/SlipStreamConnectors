@@ -58,7 +58,7 @@ class KubernetesTerminateInstances(TerminateInstancesCommand, KubernetesCommand)
         if cc.has_capability(cc.CAPABILITY_VAPP):
             cc.stop_vapps_by_ids(ids, self.get_option(self.INSTANCES_NAMESPACE))
         else:
-            cc.stop_vms_by_ids(ids, self.get_option(self.INSTANCES_NAMESPACE))
+            cc._stop_instances_in_namespace(ids, self.get_option(self.INSTANCES_NAMESPACE))
 
     def __init__(self):
         super(KubernetesTerminateInstances, self).__init__()
