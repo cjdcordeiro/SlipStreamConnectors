@@ -28,11 +28,11 @@ from slipstream_kubernetes.KubernetesClientCluster import KubernetesClientCluste
 
 class KubernetesDescribeInstances(DescribeInstancesCommand, KubernetesCommand):
 
-    def _vm_get_state(self, cc, vm):
-        return vm['status']['phase']
-
-    def _vm_get_id(self, cc, vm):
-        return vm['metadata']['uid']
+    # def _vm_get_state(self, cc, vm):
+    #     return vm['status']['phase']
+    #
+    # def _vm_get_id(self, cc, vm):
+    #     return vm['metadata']['uid']
 
     def _print_results(self, cc, vms):
         print "id, name, node name, image, state, ip, " \
@@ -40,19 +40,19 @@ class KubernetesDescribeInstances(DescribeInstancesCommand, KubernetesCommand):
                 "cpu request, ram request, instance-type, creation time, start time"
         for vm in vms:
             print ', '.join([
-                self._vm_get_id(cc, vm),
-                self._vm_get_name(cc, vm),
-                self._vm_get_node_name(cc, vm),
-                self._vm_get_image_name(cc, vm),
-                self._vm_get_state(cc, vm) or 'Unknown',
-                self._vm_get_ip(cc, vm),
-                self._vm_get_port_mappings(cc, vm),
-                self._vm_get_restart_policy(cc, vm),
-                self._vm_get_cpu(cc, vm),
-                self._vm_get_ram(cc, vm),
-                self._vm_get_instance_type(cc, vm),
-                self._vm_get_creation_time(cc, vm),
-                self._vm_get_start_time(cc, vm)])
+                cc._vm_get_id(vm),
+                cc._vm_get_name(vm),
+                cc._vm_get_node_name(vm),
+                cc._vm_get_image_name(vm),
+                cc._vm_get_state(vm) or 'Unknown',
+                cc._vm_get_ip(vm),
+                cc._vm_get_port_mappings(vm),
+                cc._vm_get_restart_policy(vm),
+                cc._vm_get_cpu(vm),
+                cc._vm_get_ram(vm),
+                cc._vm_get_instance_type( vm),
+                cc._vm_get_creation_time( vm),
+                cc._vm_get_start_time( vm)])
 
     def __init__(self):
         super(KubernetesDescribeInstances, self).__init__()
