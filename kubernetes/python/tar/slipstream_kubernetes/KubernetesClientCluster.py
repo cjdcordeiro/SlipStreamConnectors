@@ -264,7 +264,7 @@ class KubernetesClientCluster(BaseCloudConnector):
 
     def _vm_get_node_name(self, vm):
         # Return the host name
-        if _vm_get_state(vm) != "Running":
+        if self._vm_get_state(vm) != "Running":
             return ""
         else:
             return vm['spec']['nodeName']
