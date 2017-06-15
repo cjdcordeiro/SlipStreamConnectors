@@ -24,6 +24,8 @@ from slipstream_kubernetes.KubernetesCommand import KubernetesCommand
 
 class KubernetesTerminateInstances(TerminateInstancesCommand, KubernetesCommand):
 
+    INSTANCES_NAMESPACE = "instance-namespace"
+
     def _set_command_specific_options(self, parser):
         parser.add_option('--' + self.INSTANCE_IDS_KEY, dest=self.INSTANCE_IDS_KEY,
                           help='Instance ID (can be used multiple times)',

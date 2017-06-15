@@ -166,7 +166,7 @@ class KubernetesClientCluster(BaseCloudConnector):
     #     #     self._rpc_execute('one.vm.action', 'delete', int(vm.findtext('ID')))
 
     @override
-    def _stop_vms_by_ids(self, ids):
+    def _stop_vms_by_ids(self, ids, namespace):
         for _id in map(str, ids):
             # self._rpc_execute('one.vm.action', 'delete', _id)
             pass
