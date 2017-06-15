@@ -129,27 +129,49 @@ class KubernetesClientCluster(BaseCloudConnector):
 
     def _start_container_in_k8s(self, user_info, node_instance, container_name):
         instance_name = self._set_instance_name(container_name)
-
+        instance_type = "Pod"
+        instance_image_id = node_instance.get_image_id()
         #################### TODO
         # BUILD IMG does not apply the same way on containers. tmp key is not needed neither there are any contextualization packages like cloud-init
-        if self.is_build_image():
-            context = self._set_contextualization(node_instance.get_cloud_parameter('contextualization.type'),
-                                                  self.tmp_public_key, '')
-        else:
-            context = self._set_contextualization(node_instance.get_cloud_parameter('contextualization.type'),
-                                                  self.user_info.get_public_keys(),
-                                                  self._get_bootstrap_script(node_instance))
+        # if self.is_build_image():
+        #     context = self._set_contextualization(node_instance.get_cloud_parameter('contextualization.type'),
+        #                                           self.tmp_public_key, '')
+        # else:
+        #     context = self._set_contextualization(node_instance.get_cloud_parameter('contextualization.type'),
+        #                                           self.user_info.get_public_keys(),
+        #                                           self._get_bootstrap_script(node_instance))
         ####################
 
-        # remove  - opennebula specific
-        custom_vm_template = node_instance.get_cloud_parameter('custom.vm.template') or ''
+        # create pod manifest
+        manifest = '''
+        {
+            "kind": "%s",
+            "apiVersion": "v1",
+            "metadata":{
+                "name": "%s",
+                "namespace": "default",
+                "labels": {
+                    "name": "%s"
+                }
+            },
+            "spec": {
+                "containers": [{
+                    "name": "%s",
+                    "image": "%s",
+                    "ports": [{"containerPort": 80}],
+                    "resources": {
+                        "limits": {
+                            "memory": "128Mi",
+                            "cpu": "500m"
+                        }
+                    }
+                }]
+            }
+        }''' % (instance_type, instance_name, instance_name, instance_name, instance_image_id)
 
-        template = ' '.join([instance_name, cpu, ram, disks, additionnal_disks, nics, context, custom_vm_template])
-
-        ########### TODO : create POD
-        #vm_id = self._rpc_execute('one.vm.allocate', template, False)
-        #vm = self._rpc_execute('one.vm.info', vm_id)
-        return None
+        request_url = "%s/namespaces/default/%ss" % (self.user_info.get_cloud_endpoint(), \
+                        instance_type)
+        return requests.post(request_url, data=manifest, headers={'Content-Type': 'application/json'})
 
     @override
     def list_instances(self):
