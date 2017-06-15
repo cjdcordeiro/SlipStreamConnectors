@@ -167,9 +167,11 @@ class KubernetesClientCluster(BaseCloudConnector):
 
     @override
     def _stop_vms_by_ids(self, ids, namespace):
+        instance_type = "pods"
         for _id in map(str, ids):
-            # self._rpc_execute('one.vm.action', 'delete', _id)
-            pass
+            request_url = "%s/namespaces/%s/%s/%s" % (self.user_info.get_cloud_endpoint(), \
+                                namespace, instance_type, _id)
+            delete = requests.delete(request_url)
 
     @override
     def _build_image(self, user_info, node_instance):
