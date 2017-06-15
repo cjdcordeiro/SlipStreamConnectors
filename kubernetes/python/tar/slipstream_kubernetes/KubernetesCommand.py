@@ -30,12 +30,12 @@ class KubernetesCommand(CloudClientCommand):
     def get_connector_class(self):
         return KubernetesClientCluster
 
-    # def set_cloud_specific_options(self, parser):
-    #     parser.add_option('--' + self.ENDPOINT_KEY, dest=self.ENDPOINT_KEY, help='Endpoint, URL of XMLRPC frontend',
-    #                       default='', metavar='ENDPOINT')
-    #
-    # def get_cloud_specific_user_cloud_params(self):
-    #     return {self.ENDPOINT_KEY: self.get_option(self.ENDPOINT_KEY)}
-    #
-    # def get_cloud_specific_mandatory_options(self):
-    #     return [self.ENDPOINT_KEY]
+    def set_cloud_specific_options(self, parser):
+        parser.add_option('--' + self.ENDPOINT_KEY, dest=self.ENDPOINT_KEY, help='Kubernetes API endpoint (e.g. http://myk8s.com:8080/api/v1)',
+                          default='', metavar='ENDPOINT')
+
+    def get_cloud_specific_user_cloud_params(self):
+        return {self.ENDPOINT_KEY: self.get_option(self.ENDPOINT_KEY)}
+
+    def get_cloud_specific_mandatory_options(self):
+        return [self.ENDPOINT_KEY]

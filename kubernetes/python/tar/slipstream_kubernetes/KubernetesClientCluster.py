@@ -153,7 +153,10 @@ class KubernetesClientCluster(BaseCloudConnector):
 
     @override
     def list_instances(self):
-        pods = requests.get("http://159.100.240.249:8080/api/v1/pods")
+        instance_type = "pods"
+        request_url = "%s/%s" % (self.user_info.get_cloud_endpoint(), instance_type)
+        pods = requests.get(request_url)
+
         # returns list([]) of items({})
         return json.loads(pods.text)['items']
 
@@ -255,13 +258,57 @@ class KubernetesClientCluster(BaseCloudConnector):
         except TypeError:
             return xmlrpclib.ServerProxy(url)
 
+    def _vm_get_name(self, vm):
+        # Return the container name
+        return vm['spec']['containers'][0]['name']
+
+    def _vm_get_node_name(self, vm):
+        # Return the host name
+        return vm['spec']['nodeName']
+
+    def _vm_get_image_name(self, vm):
+        # Return the container image name
+        return vm['spec']['container'][0]['image']
+
+    def _vm_get_port_mappings(self, vm):
+        # string of hostPort:containerPort mappings
+        port_mappings = ""
+        for mapping in vm['spec']['container']['ports']:
+            port_mappings += " , %s:%s" % vm['spec']['container']['ports'].get("hostPort", "")
+                            vm['spec']['container']['ports'].get("containerPort", "")
+        return port_mappings
+
+    def _vm_get_restart_policy(self, vm):
+        # Return the container restart policy
+        return vm['spec']['restartPolicy']
+
+    def _vm_get_creation_time(self, vm):
+        # Return the container creation time
+        return vm['metadata']['creationTimestamp']
+
+    def _vm_get_start_time(self, vm):
+        # Return the container creation time
+        return vm['status']['startTime']
+
     @override
     def _vm_get_ip(self, vm):
         return vm['status']['podIP']
 
     @override
+    def _vm_get_cpu(self, vm):
+        return vm['spec']['containers'][0]['resources']['requests']['cpu']
+
+    @override
+    def _vm_get_ram(self, vm):
+        return vm['spec']['containers'][0]['resources']['requests']['memory']
+
+    @override
     def _vm_get_id(self, vm):
-        return vm['metadata']['uid']
+        return vm['metadata']['name']
+
+    @override
+    def _vm_get_state(self, vm):
+        return vm['status']['phase']
 
     @override
     def _vm_get_ip_from_list_instances(self, vm_instance):
