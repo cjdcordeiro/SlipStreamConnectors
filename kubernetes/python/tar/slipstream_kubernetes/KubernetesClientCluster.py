@@ -273,7 +273,7 @@ class KubernetesClientCluster(BaseCloudConnector):
     def _vm_get_port_mappings(self, vm):
         # string of hostPort:containerPort mappings
         port_mappings = ""
-        if 'ports' in a[0]['spec']['containers'][0].keys():
+        if 'ports' in vm['spec']['containers'][0].keys():
             for mapping in vm['spec']['containers'][0]['ports']:
                 port_mappings += " , %s:%s" % (vm['spec']['container']['ports'].get("hostPort", ""), \
                                 vm['spec']['containers']['ports'].get("containerPort", ""))
