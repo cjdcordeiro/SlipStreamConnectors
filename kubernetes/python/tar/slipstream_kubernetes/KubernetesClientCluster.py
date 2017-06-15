@@ -268,7 +268,7 @@ class KubernetesClientCluster(BaseCloudConnector):
 
     def _vm_get_image_name(self, vm):
         # Return the container image name
-        return vm['spec']['container'][0]['image']
+        return vm['spec']['containers'][0]['image']
 
     def _vm_get_port_mappings(self, vm):
         # string of hostPort:containerPort mappings
