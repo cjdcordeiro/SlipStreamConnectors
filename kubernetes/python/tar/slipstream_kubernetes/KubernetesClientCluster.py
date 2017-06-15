@@ -167,7 +167,7 @@ class KubernetesClientCluster(BaseCloudConnector):
 
     @override
     def _stop_vms_by_ids(self, ids):
-        for _id in map(int, ids):
+        for _id in map(str, ids):
             # self._rpc_execute('one.vm.action', 'delete', _id)
             pass
 
@@ -261,6 +261,9 @@ class KubernetesClientCluster(BaseCloudConnector):
     def _vm_get_name(self, vm):
         # Return the container name
         return vm['spec']['containers'][0]['name']
+
+    def _vm_get_namespace(self, vm):
+        return vm['metadata']['namespace']
 
     def _vm_get_node_name(self, vm):
         # Return the host name

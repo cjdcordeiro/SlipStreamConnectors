@@ -35,13 +35,14 @@ class KubernetesDescribeInstances(DescribeInstancesCommand, KubernetesCommand):
     #     return vm['metadata']['uid']
 
     def _print_results(self, cc, vms):
-        print "id, name, node name, image, state, ip, " \
+        print "id, name, namespace, node name, image, state, ip, " \
                 "port mappings [containerPort:hostPort], restart policy, " \
                 "cpu request, ram request, instance-type, creation time, start time"
         for vm in vms:
             print ', '.join([
                 cc._vm_get_id(vm),
                 cc._vm_get_name(vm),
+                cc._vm_get_namespace(vm),
                 cc._vm_get_node_name(vm),
                 cc._vm_get_image_name(vm),
                 cc._vm_get_state(vm) or 'Unknown',

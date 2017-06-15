@@ -24,6 +24,38 @@ from slipstream_kubernetes.KubernetesCommand import KubernetesCommand
 
 class KubernetesTerminateInstances(TerminateInstancesCommand, KubernetesCommand):
 
+    def _set_command_specific_options(self, parser):
+        parser.add_option('--' + self.INSTANCE_IDS_KEY, dest=self.INSTANCE_IDS_KEY,
+                          help='Instance ID (can be used multiple times)',
+                          action='append', default=[], metavar='ID')
+        parser.add_option('--' + self.INSTANCES_IDS_FILE_KEY, dest=self.INSTANCES_IDS_FILE_KEY,
+                          help='File containing a list of instance ids (one per line)',
+                          default=None, metavar='FILE')
+        parser.add_option('--' + self.INSTANCES_NAMESPACE, dest=self.INSTANCES_NAMESPACE,
+                          help='Namespace where the instances are',
+                          default=[], metavar='NAMESPACE')
+
+    def do_work(self):
+        ids = self.get_option(self.INSTANCE_IDS_KEY)
+        ch = ConfigHolder(options={'verboseLevel': self.options.verbose and 3 or 0,
+                                   'retry': False,
+                                   KEY_RUN_CATEGORY: ''},
+                          context={'foo': 'bar'})
+        cc = self.get_connector_class()(ch)
+
+        # pylint: disable=protected-access
+        cc._initialization(self.user_info, **self.get_initialization_extra_kwargs())
+
+        fname = self.get_option(self.INSTANCES_IDS_FILE_KEY)
+        if fname:
+            with open(fname) as f:
+                ids += f.read().splitlines()
+
+        if cc.has_capability(cc.CAPABILITY_VAPP):
+            cc.stop_vapps_by_ids(ids, self.get_option(self.INSTANCES_NAMESPACE))
+        else:
+            cc.stop_vms_by_ids(ids, self.get_option(self.INSTANCES_NAMESPACE))
+
     def __init__(self):
         super(KubernetesTerminateInstances, self).__init__()
 

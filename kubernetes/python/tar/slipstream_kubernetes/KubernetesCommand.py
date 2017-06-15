@@ -38,6 +38,8 @@ class KubernetesCommand(CloudClientCommand):
         return {self.ENDPOINT_KEY: self.get_option(self.ENDPOINT_KEY)}
 
     def _get_common_mandatory_options(self):
+        # Remove USER PASS from mandatory parameters as we might be dealing
+        # with a no protected cluster
         return []
 
     def get_cloud_specific_mandatory_options(self):
