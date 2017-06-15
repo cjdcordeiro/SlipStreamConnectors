@@ -264,7 +264,7 @@ class KubernetesClientCluster(BaseCloudConnector):
 
     def _vm_get_node_name(self, vm):
         # Return the host name
-        if "containerStatuses" not in vm['spec'].keys():
+        if "containerStatuses" not in vm['status'].keys():
             return ""
         else:
             return vm['spec']['nodeName']
@@ -292,14 +292,14 @@ class KubernetesClientCluster(BaseCloudConnector):
 
     def _vm_get_start_time(self, vm):
         # Return the container creation time
-        if "containerStatuses" not in vm['spec'].keys():
+        if "containerStatuses" not in vm['status'].keys():
             return ""
         else:
             return vm['status']['startTime']
 
     @override
     def _vm_get_ip(self, vm):
-        if "containerStatuses" not in vm['spec'].keys():
+        if "containerStatuses" not in vm['status'].keys():
             return ""
         else:
             return vm['status']['podIP']
