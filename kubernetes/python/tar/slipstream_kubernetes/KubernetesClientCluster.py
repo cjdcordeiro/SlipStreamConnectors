@@ -173,7 +173,7 @@ class KubernetesClientCluster(BaseCloudConnector):
                         instance_type.lower())
         create = requests.post(request_url, data=manifest, headers={'Content-Type': 'application/json'})
         # pod = self._get_pod(instance_name, "defaut")
-        return create.text
+        return json.loads(create.text)
 
     @override
     def list_instances(self):
