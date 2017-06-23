@@ -108,7 +108,7 @@ class KubernetesClientCluster(BaseCloudConnector):
         return re.sub('[^a-zA-Z0-9-]', '', name)
 
     def _set_instance_name(self, vm_name):
-        return 'NAME = {0}'.format(self.format_instance_name(vm_name))
+        return self.format_instance_name(vm_name)
 
 
     #################### TODO
@@ -144,36 +144,36 @@ class KubernetesClientCluster(BaseCloudConnector):
 
         # create pod manifest
         manifest = '''
-        {
-            "kind": "%s",
-            "apiVersion": "v1",
-            "metadata":{
-                "name": "%s",
-                "namespace": "default",
-                "labels": {
-                    "name": "%s"
+{
+    "kind": "%s",
+    "apiVersion": "v1",
+    "metadata":{
+        "name": "%s",
+        "namespace": "default",
+        "labels": {
+            "name": "%s"
+        }
+    },
+    "spec": {
+        "containers": [{
+            "name": "%s",
+            "image": "%s",
+            "ports": [{"containerPort": 80}],
+            "resources": {
+                "limits": {
+                    "memory": "128Mi",
+                    "cpu": "500m"
                 }
-            },
-            "spec": {
-                "containers": [{
-                    "name": "%s",
-                    "image": "%s",
-                    "ports": [{"containerPort": 80}],
-                    "resources": {
-                        "limits": {
-                            "memory": "128Mi",
-                            "cpu": "500m"
-                        }
-                    }
-                }]
             }
-        }''' % (instance_type, instance_name, instance_name, instance_name, instance_image_id)
+        }]
+    }
+}''' % (instance_type, instance_name, instance_name, instance_name, instance_image_id)
 
         request_url = "%s/namespaces/default/%ss" % (self.user_info.get_cloud_endpoint(), \
-                        instance_type)
+                        instance_type.lower())
         create = requests.post(request_url, data=manifest, headers={'Content-Type': 'application/json'})
-        pod = self._get_pod(instance_name, "defaut")
-        return pod
+        # pod = self._get_pod(instance_name, "defaut")
+        return create.text
 
     @override
     def list_instances(self):

@@ -47,7 +47,7 @@ class KubernetesRunInstances(RunInstancesCommand, KubernetesCommand):
                           default=[], metavar='NAMESPACE')
 
     def get_cloud_specific_mandatory_options(self):
-        return [self.INSTANCES_NAMESPACE, KubernetesCommand.get_cloud_specific_mandatory_options(self)]
+        return KubernetesCommand.get_cloud_specific_mandatory_options(self).append(self.INSTANCES_NAMESPACE)
 
 
 if __name__ == "__main__":
