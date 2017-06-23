@@ -171,7 +171,9 @@ class KubernetesClientCluster(BaseCloudConnector):
 
         request_url = "%s/namespaces/default/%ss" % (self.user_info.get_cloud_endpoint(), \
                         instance_type)
-        return requests.post(request_url, data=manifest, headers={'Content-Type': 'application/json'})
+        create = requests.post(request_url, data=manifest, headers={'Content-Type': 'application/json'})
+        pod = self._get_pod(instance_name, "defaut")
+        return pod
 
     @override
     def list_instances(self):
@@ -186,6 +188,12 @@ class KubernetesClientCluster(BaseCloudConnector):
     # def _stop_deployment(self):
     #     # for _, vm in self.get_vms().items():
     #     #     self._rpc_execute('one.vm.action', 'delete', int(vm.findtext('ID')))
+
+    def _get_pod(self, pod_name, namespace):
+        instance_type = "pods"
+        request_url = "%s/namespaces/%s/%s/%s" % (self.user_info.get_cloud_endpoint(), \
+                                namespace, instance_type, pod_name)
+        return request_url
 
     @override
     def _stop_vms_by_ids(self, ids):

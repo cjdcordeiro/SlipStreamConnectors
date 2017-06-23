@@ -34,6 +34,7 @@ class KubernetesRunInstances(RunInstancesCommand, KubernetesCommand):
     CUSTOM_VM_TEMPLATE_KEY = 'custom-vm-template'
     NETWORK_SPECIFIC_NAME_KEY = 'network-specific-name'
     CONTEXTUALIZATION_TYPE_KEY = 'contextualization-type'
+    INSTANCES_NAMESPACE = "instance-namespace"
 
     def __init__(self):
         super(KubernetesRunInstances, self).__init__()
@@ -41,12 +42,12 @@ class KubernetesRunInstances(RunInstancesCommand, KubernetesCommand):
     def set_cloud_specific_options(self, parser):
         KubernetesCommand.set_cloud_specific_options(self, parser)
 
-        self.parser.add_option('--' + self.CONTEXTUALIZATION_TYPE_KEY, dest=self.CONTEXTUALIZATION_TYPE_KEY,
-                               help='Contextualization type (default: "one-context")',
-                               default='one-context', metavar='CONTEXTUALIZATION_TYPE')
+        self.parser.add_option('--' + self.INSTANCES_NAMESPACE, dest=self.INSTANCES_NAMESPACE,
+                          help='Namespace where the instances are',
+                          default=[], metavar='NAMESPACE')
 
     def get_cloud_specific_mandatory_options(self):
-        return KubernetesCommand.get_cloud_specific_mandatory_options(self)
+        return [self.INSTANCES_NAMESPACE, KubernetesCommand.get_cloud_specific_mandatory_options(self)]
 
 
 if __name__ == "__main__":
